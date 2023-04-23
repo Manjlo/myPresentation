@@ -3,8 +3,7 @@ package myPresentation;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class GUI extends JFrame {
     //atributos
@@ -30,10 +29,10 @@ public class GUI extends JFrame {
         //Definir container y Layout del JFrame
         //Crear objetos Escucha y Control
         //Configurar JComponents
-        title = new Title("A little more about me", Color.BLACK);
+        title = new Title("My presentation", Color.BLACK);
         myPhoto = new JButton("This is me");
-        myHobby = new JButton("This is my passion");
-        myExpectations = new JButton("I expect to get the best of you");
+        myHobby = new JButton("This is my hobby");
+        myExpectations = new JButton("Who I am");
         containerButtons = new JPanel();
         containerImage = new JPanel();
         listener = new Listener();
@@ -54,6 +53,42 @@ public class GUI extends JFrame {
         this.add(title, BorderLayout.NORTH);
         this.add(containerButtons, BorderLayout.SOUTH);
         this.add(containerImage, BorderLayout.CENTER);
+
+        containerImage.setFocusable(true);
+        containerImage.requestFocusInWindow();
+        containerImage.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                imageLabel.setIcon(null);
+                char keyChar = Character.toLowerCase(e.getKeyChar());
+                System.out.println(keyChar);
+                if (keyChar == 'm') {
+                    expectativesText.setText("I am a topographical engineering student and a software development technologist  \n" +
+                            "Current, I working as FullStack Developer in React and NodeJs technologies.\n" +
+                            "I like play videoGames and watch movies");
+                    expectativesText.setBackground(null);
+                    expectativesText.setForeground(Color.BLACK);
+                    containerImage.add(expectativesText);
+                    revalidate();
+                    repaint();
+                }
+            }
+
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+        containerImage.requestFocus();
+
     }
 
     public static void main(String[] args) {
@@ -67,20 +102,28 @@ public class GUI extends JFrame {
 
     private class Listener implements ActionListener{
         private ImageIcon image;
+        private int myHobbyClicks;
         @Override
         public void actionPerformed(ActionEvent e) {
             //JOptionPane.showMessageDialog(null, "Press button");
             imageLabel.setIcon(null);
             containerImage.remove(expectativesText);
+            containerImage.requestFocusInWindow();
             if(e.getSource() == myPhoto){
                 this.image = new ImageIcon(getClass().getResource("/resources/Me.jpg"));
                 imageLabel.setIcon(image);
             }else if(e.getSource() == myHobby){
-                this.image = new ImageIcon(getClass().getResource("/resources/Hobby.jpg"));
-                imageLabel.setIcon(image);
-            }else if(e.getSource() == myExpectations) {
-                expectativesText.setText("I expect to get the best of everyone of you \n" +
-                        "My contact is carlos.felipe.montoya@correounivalle.edu.co");
+                myHobbyClicks++;
+                        if (myHobbyClicks==2) {
+                            this.image = new ImageIcon(getClass().getResource("/resources/Hobby.jpg"));
+                            imageLabel.setIcon(image);
+                            myHobbyClicks = 0;
+                        }
+            }
+            else if(e.getSource() == myExpectations) {
+                expectativesText.setText("I am a topographical engineering student and a software development technologist  \n" +
+                        "Current, I working as FullStack Developer in React and NodeJs technologies.\n" +
+                        "I like play videoGames and watch movies");
                 expectativesText.setBackground(null);
                 expectativesText.setForeground(Color.BLACK);
                 containerImage.add(expectativesText);
@@ -88,5 +131,6 @@ public class GUI extends JFrame {
             revalidate();
             repaint();
         }
+
     }
 }
